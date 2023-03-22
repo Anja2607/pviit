@@ -9,6 +9,8 @@ import * as morgan from "morgan";
 import IApplicationResources from "./common/IApplicationResources.interface";
 import * as mysql2 from "mysql2/promise";
 import { error } from "console";
+import IngredientModel from "./components/ingredient/IngredientModel.model";
+import IngredientService from "./components/ingredient/IngredientService.service";
 ;
 
 
@@ -20,16 +22,23 @@ fs.mkdirSync(config.logging.path, {
     recursive: true,
 });
 
+const db = await mysql2.createConnection({
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password,
+    database: config.database.database,
+    charset: config.database.charset,
+    timezone: config.database.timezone,
+});
+
 const applicationRecourses: IApplicationResources = {
-    databaseConnection: await mysql2.createConnection({
-        host: config.database.host,
-        port: config.database.port,
-        user: config.database.user,
-        password: config.database.password,
-        database: config.database.database,
-        charset: config.database.charset,
-        timezone: config.database.timezone,
-    }),
+    databaseConnection: db,
+    services: {
+        category: new CategoryService(db),
+        ingredient: new IngredientService(db)
+    }
+
 };
 
 const application: express.Application = express();

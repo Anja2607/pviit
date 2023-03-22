@@ -1,17 +1,14 @@
 import { Request, Response } from "express";
-import CategoryService, { DefaultCategoryAdapterOptions } from "./CategoryService.service";
+import BaseController from "../../common/BaseController";
+import { DefaultCategoryAdapterOptions } from "./CategoryService.service";
 import IAddCategory, { AddCategoryValidator } from "./dto/IAddCategory.dto";
 
 
-class CategoryController {
-    private categoryService: CategoryService;
+class CategoryController extends BaseController{
+    
 
-    constructor(categoryService: CategoryService) {
-        this.categoryService = categoryService;
-    }
-
-    async getAll(req: Request, res: Response) {
-        this.categoryService.getAll(DefaultCategoryAdapterOptions)
+    async getAll(req: Request, res: Response): Promise<void> {
+        this.services.category.getAll(DefaultCategoryAdapterOptions)
         .then(result => {
             res.send(result);
         })
@@ -28,7 +25,7 @@ class CategoryController {
 
         const id: number = +req.params?.id;
 
-        this.categoryService.getById(id, DefaultCategoryAdapterOptions)
+        this.services.category.getById(id, DefaultCategoryAdapterOptions)
             .then(result => {
                 if (result === null) {
                     return res.sendStatus(404);
@@ -49,7 +46,7 @@ class CategoryController {
             return res.status(400).send(AddCategoryValidator.errors);
         }
 
-        this.categoryService.add(data)
+        this.services.category.add(data)
             .then(result => {
                 res.send(result);
             })
