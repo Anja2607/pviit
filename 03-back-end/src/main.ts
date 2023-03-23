@@ -11,6 +11,7 @@ import * as mysql2 from "mysql2/promise";
 import { error } from "console";
 import IngredientModel from "./components/ingredient/IngredientModel.model";
 import IngredientService from "./components/ingredient/IngredientService.service";
+import AdministratorService from "./components/administrator/AdministratorService.service";
 ;
 
 
@@ -36,7 +37,8 @@ const applicationRecourses: IApplicationResources = {
     databaseConnection: db,
     services: {
         category: new CategoryService(db),
-        ingredient: new IngredientService(db)
+        ingredient: new IngredientService(db),
+        administrator: new AdministratorService(db)
     }
 
 };

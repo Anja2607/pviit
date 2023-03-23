@@ -18,7 +18,7 @@ const DefaultCategoryAdapterOptions: IAddCategoryAdapterOptions = {
 
 class CategoryService extends BaseService<CategoryModel, IAddCategoryAdapterOptions>{
     tableName(): string {
-        throw new Error("Method not implemented.");
+        return "category";
     }
    
 
@@ -37,32 +37,12 @@ class CategoryService extends BaseService<CategoryModel, IAddCategoryAdapterOpti
     }
 
     public async add(data: IAddCategory): Promise<CategoryModel> {
-        return new Promise<CategoryModel>((resolve, reject) => {
-            const sql: string = "INSERT `catefory` SET `name` = ?;";
-
-            this.db.execute(sql, [ data.name ])
-                .then(async result => {
-                    const info: any = result;
-
-                    const newCategoryId = +(info[0]?.insertId);
-
-                    const newCategory: CategoryModel|null = await this.getById(newCategoryId, DefaultCategoryAdapterOptions);
-
-                    if (newCategory === null) {
-                        return reject({
-                            message: 'Duplcate category name!',})
-                    }
-
-                    resolve(newCategory);
-                })
-                .catch(error => {
-                    reject(error);
-                })
-        });
+        return this.baseAdd(data, DefaultCategoryAdapterOptions);
     }
-    
-    }
+
+}
 
 
 export default CategoryService;
 export {DefaultCategoryAdapterOptions};
+

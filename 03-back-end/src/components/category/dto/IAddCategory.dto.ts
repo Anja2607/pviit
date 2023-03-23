@@ -1,8 +1,9 @@
 import Ajv from "ajv";
+import IServiceData from "../../../common/IServiceData.interface";
 
 const ajv = new Ajv();
 
-export default interface IAddCategory {
+export default interface IAddCategory extends IServiceData {
     name: string;
 }
 

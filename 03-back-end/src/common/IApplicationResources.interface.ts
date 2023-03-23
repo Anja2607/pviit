@@ -5,6 +5,7 @@ import IngredientService from "../components/ingredient/IngredientService.servic
 export interface IServices {
     category: CategoryService;
     ingredient: IngredientService;
+    administrator: AdministratorService;
 }
 
 export default interface IApplicationResources {
