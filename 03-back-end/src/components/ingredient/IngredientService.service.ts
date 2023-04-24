@@ -9,6 +9,9 @@ class IngredientAdapterOptions implements IAdapterOptions {
 
 }
 class IngredientService extends BaseService<IngredientModel, IngredientAdapterOptions>{
+    getAllByCategoryId(categoryId: number, arg1: {}): any {
+        throw new Error("Method not implemented.");
+    }
     tableName(): string {
         return "ingredient";
     
