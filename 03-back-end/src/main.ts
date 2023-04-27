@@ -12,6 +12,7 @@ import { error } from "console";
 import IngredientModel from "./components/ingredient/IngredientModel.model";
 import IngredientService from "./components/ingredient/IngredientService.service";
 import AdministratorService from "./components/administrator/AdministratorService.service";
+import RecipeService from "./components/recipe/RecipeService.service";
 ;
 
 
@@ -35,13 +36,20 @@ const db = await mysql2.createConnection({
 
 const applicationRecourses: IApplicationResources = {
     databaseConnection: db,
+    services: {
+        category: null,
+        ingredient: null,
+        administrator: null,
+        recipe: null,
+    }
 };
 
-applicationRecourses.services = {
-        category: new CategoryService(applicationRecourses),
-        ingredient: new IngredientService(applicationRecourses),
-        administrator: new AdministratorService(applicationRecourses)
-    }
+applicationRecourses.services.category      =  new CategoryService(applicationRecourses),
+applicationRecourses.services.ingredient    =  new IngredientService(applicationRecourses),      
+applicationRecourses.services.administrator =  new AdministratorService(applicationRecourses),        
+applicationRecourses.services.recipe        =  new RecipeService(applicationRecourses)
+        
+    
 
 const application: express.Application = express();
 
