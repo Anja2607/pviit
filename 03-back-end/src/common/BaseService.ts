@@ -88,28 +88,57 @@ export default abstract class BaseService<ReturnModel extends IModel, AdapterOpt
             }
         );
     }
-    protected async getAllByFieldNameAnValue(fieldName: string, value: any, options: AdapterOptions): Promise<ReturnModel | null> {
+
+    protected async getAllByFieldNameAnValue( fieldName: string, value: any, options: AdapterOptions): Promise<ReturnModel[]> {
         const tableName = this.tableName();
-
-        return new Promise<ReturnModel> (
+        return new Promise(
             (resolve, reject ) => {
-                const sql: string = `SELECT * FROM \`${tableName}\` WHERE ${fieldName}_id = ?;`;
-
+                const sql = `SELECT * FROM \`${ tableName } \` WHERE \`${ fieldName } \` = ?;`;  
                 this.db.execute(sql, [ value ])
-                this.db.execute(sql)
                     .then( async ( [ rows ] ) => {
                         if(rows === undefined) {
-                            return resolve(null);
+                            return resolve([]);
                         }
                         
-                        resolve(await this.adaptToModel(rows, options));
+                        const recipes: ReturnModel[] = [];
+                        for (const row of rows as mysql2.RowDataPacket[]) {
+                            recipes.push(row as ReturnModel);
+                        }
+
+                        resolve(recipes);
                     })
                     .catch(error => {
                         reject(error);
                     });
             }
-        );
+        )
     }
+
+    protected async getAllFromTableByFieldNameAnValue<OwnReturnType>(tableName: string, fieldName: string, value: any): Promise<OwnReturnType[]> {
+       
+        return new Promise(
+            (resolve, reject ) => {
+                const sql = `SELECT * FROM \`${tableName}\` WHERE \`  ${fieldName} \` = ?;`;
+
+                this.db.execute(sql, [ value ])
+                    .then( async ( [ rows ] ) => {
+                        if(rows === undefined) {
+                            return resolve([]);
+                        }
+                        
+                        const recipes: OwnReturnType[] = [];
+                        for (const row of rows as mysql2.RowDataPacket[]) {
+                            recipes.push(row as OwnReturnType);
+                        }
+
+                        resolve(recipes);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
+    }
+
 
     protected async baseAdd(data: IServiceData, options: AdapterOptions): Promise<ReturnModel> {
         const tableName = this.tableName();
@@ -140,5 +169,7 @@ export default abstract class BaseService<ReturnModel extends IModel, AdapterOpt
 
         });
     }
+
+    
 
 }

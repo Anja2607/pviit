@@ -1,8 +1,14 @@
+import { resolve } from "path";
 import BaseService from "../../common/BaseService"
 import IAdapterOptions from "../../common/IAdapterOptions.interface"
+import { IRecipeIngredient } from "../ingredient/IngredientModel.model";
 import RecipeModel from "./RecipeModel.model"
 
 export interface IRecipeAdapterOptions extends IAdapterOptions {
+    loadCategory: boolean;
+    loadIngredient: boolean;
+}
+export class DefaultRecipeAdapterOptions implements IRecipeAdapterOptions {
     loadCategory: false;
     loadIngredient: false;
 }
@@ -27,8 +33,15 @@ export default class RecipeService extends BaseService<RecipeModel, IRecipeAdapt
                 });
             }
 
+            if (options.loadIngredient) {
+                recipe.ingredients = await this.services.ingredient.getAllByRecipeId(recipe.recipeId);    
+            }  
+
             resolve(recipe);
         })
+    }  
+
+    async getAllByCategoryId(categoryId: number, options: IRecipeAdapterOptions) {
+        return this.getAllByFieldNameAnValue("category_id", categoryId, options);
     }
-    
 }

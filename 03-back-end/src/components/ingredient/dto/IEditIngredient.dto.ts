@@ -3,16 +3,16 @@ import IServiceData from "../../../common/IServiceData.interface";
 
 const ajv = new Ajv();
 
-export default interface IAddCategory extends IServiceData {
+export interface IEditIngredientDto {
     name: string;
 }
 
-interface IAddCategoryServiceDto {
+export default interface IEditIngredient extends IServiceData {
     name: string;
-    categoryId: number;
+    category_id: number;
 }
 
-const AddCategoryValidator = ajv.compile({
+const EditIngredientValidator = ajv.compile ({
     type: "object",
     properties: {
         name: {
@@ -27,8 +27,4 @@ const AddCategoryValidator = ajv.compile({
     additionalProperties: false,
 });
 
-
-export {AddCategoryValidator, IAddCategoryServiceDto};
-
-
- 
+export { EditIngredientValidator };

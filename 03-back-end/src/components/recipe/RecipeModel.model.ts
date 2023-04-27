@@ -11,4 +11,6 @@ export default class RecipeModel implements IModel {
 
     category?: CategoryModel = null;
     ingredients?: IngredientModel[] = [];
+    recipe: IngredientModel;
+    
 }
