@@ -3,6 +3,7 @@ import BaseService from "../../common/BaseService"
 import IAdapterOptions from "../../common/IAdapterOptions.interface"
 import { IRecipeIngredient } from "../ingredient/IngredientModel.model";
 import RecipeModel from "./RecipeModel.model"
+import IAddRecipe from "./dto/IAddRecipe.dto";
 
 export interface IRecipeAdapterOptions extends IAdapterOptions {
     loadCategory: boolean;
@@ -43,5 +44,31 @@ export default class RecipeService extends BaseService<RecipeModel, IRecipeAdapt
 
     async getAllByCategoryId(categoryId: number, options: IRecipeAdapterOptions) {
         return this.getAllByFieldNameAnValue("category_id", categoryId, options);
+    }
+
+    async add(data: IAddRecipe): Promise<RecipeModel> {
+        return this.baseAdd(data, {
+            loadCategory: false,
+            loadIngredient: false,
+        });
+    }
+
+    async addRecipeIngredient(data: IRecipeIngredient): Promise<number> {
+        return new Promise((resolve, reject) => {
+            const sql: string = "INSERT item_ingredient SET item_id = , ingredient_id = ?;";
+
+            this.db.execute(sql, [ data.recipe_id, data.ingredient_id])
+            .then(async result => {
+                const info: any = result;
+    
+                const newRecipeIngredientId = +(info[0]?.insertId);
+    
+                resolve(newRecipeIngredientId);
+    
+            })
+            .catch(error => {
+                reject(error);
+            });
+        })
     }
 }

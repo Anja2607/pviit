@@ -13,6 +13,7 @@ import IngredientModel from "./components/ingredient/IngredientModel.model";
 import IngredientService from "./components/ingredient/IngredientService.service";
 import AdministratorService from "./components/administrator/AdministratorService.service";
 import RecipeService from "./components/recipe/RecipeService.service";
+import fileUpload = require("express-fileupload");
 ;
 
 
@@ -58,6 +59,22 @@ application.use(morgan(config.logging.format, {
 }));
 
 application.use(cors());
+
+application.use(express.urlencoded({extended: true, }));
+application.use(fileUpload({
+    limits: {
+        files: 5,
+        fileSize: 1024 * 1024 * 5, //5mb
+    },
+    abortOnLimit: true,
+
+    useTempFiles: true,
+    tempFileDir: "../temp/",
+    createParentPath: true,
+    safeFileNames: true,
+    preserveExtension: true,
+}));
+
 application.use(express.json());
 
 

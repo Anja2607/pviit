@@ -154,8 +154,8 @@ export default abstract class BaseService<ReturnModel extends IModel, AdapterOpt
                 .then(async result => {
                     const info: any = result;
 
-                    const newItemId = +(info[0]?.insertId);
-                    const newItem: ReturnModel|null = await this.getById(newItemId, options); 
+                    const newRecipeId = +(info[0]?.insertId);
+                    const newItem: ReturnModel|null = await this.getById(newRecipeId, options); 
 
                     if(newItem === null) {
                         return reject({ message: 'Could not add a new item into the ' + tableName + ' table!', });
